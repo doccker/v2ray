@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  v2ray:
+    image: v2ray/official
+    restart: always
+    container_name: v2ray
+    volumes:
+      - ./config.json:/etc/v2ray/config.json
+      - ./logs:/var/log/v2ray
+    environment:
+      TZ: Asia/Shanghai
+
+  nginx:
+    image: nginx:alpine
+    restart: always
+    container_name: nginxv2
+    ports:
+      - "50344:443"
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+      - ./certs:/certs
+    environment:
+      TZ: Asia/Shanghai
+    links:
+      - v2ray:v2ray
